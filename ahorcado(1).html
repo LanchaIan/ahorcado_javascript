@@ -1,0 +1,290 @@
+<html> 
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Ahorcado</title>
+        <style>
+            .palabra1 {grid-area: palabra1;}
+            .palabra_input1 {grid-area: palabra_input1;}
+            .letra1 {grid-area: letra1;}
+            .letra_input1 {grid-area: letra_input1;}
+            .palabra2 {grid-area: palabra2;}
+            .palabra_input2 {grid-area: palabra_input2;}
+            .letra2 {grid-area: letra2;}
+            .letra_input2 {grid-area: letra_input2;}
+            .mostrar1 {grid-area: mostrar1;}
+            .mostrar2 {grid-area: mostrar2;}
+            .img1 {grid-area: img1;}
+            .img2 {grid-area: img2;}
+            .respuesta1 {grid-area: respuesta1;}
+            .respuesta2 {grid-area: respuesta2;}
+            .form1 {grid-area: form1;}
+            .form2 {grid-area: form2;}
+            .vacio1 {grid-area: vacio1;}
+            .vacio2 {grid-area: vacio2;}
+            
+            .palabra_input1{ 
+                height: 20px;
+                width: 150px;
+            }
+
+            .palabra_input2{
+                height: 20px;
+                width: 150px;
+            }
+
+            .respuesta1{
+                height: 20px;
+                width: 150px;
+            }
+
+            .respuesta2{
+                height: 20px;
+                width: 150px;
+            }
+
+            .letra_input1{
+                height: 20px;
+                width: 50px;
+            }
+
+            .letra_input2{
+                height: 20px;
+                width: 50px;
+            }
+
+            .ocultar1{
+                display: none;
+            }
+
+            .ocultar2{
+                display: none;
+            }
+
+            button {
+                position: relative;
+                height: 40px;
+                width: 80px;
+            }
+
+            div{
+                padding: 20px;
+                border-style: solid;
+                border-color: black;
+            }
+
+            .usuario1{
+                display:grid;
+                grid-template-areas: 
+                'usuario_1 usuario_1'
+                'form1 img1'
+                'mostrar1 mostrar1';
+            }
+
+            .form1{
+                display:grid;
+                grid-template-areas: 
+                'palabra1 palabra_input1'
+                'vacio1 respuesta1'
+                'letra1 letra_input1';
+            }
+
+            .usuario2{
+                display:grid;
+                grid-template-areas: 
+                'usuario_2 usuario_2'
+                'form2 img2'
+                'mostrar2 mostrar2';
+            }
+
+            .form2{
+                display:grid;
+                grid-template-areas: 
+                'palabra2 palabra_input2'
+                'vacio1 respuesta2'
+                'letra2 letra_input2';
+            }
+
+        </style>
+        <script type="text/javascript">
+            let imagenes=new Array(
+                ['img/1.jpg'],
+                ['img/2.jpg'],
+                ['img/3.jpg'],
+                ['img/4.jpg'],
+                ['img/5.jpg'],
+                ['img/6.jpg'],
+                ['img/7.jpg'],
+                ['img/8.jpg'],
+                ['img/9.jpg'],
+                ['img/10.jpg']
+            );
+            let fallos = 0;
+            let fallos2= 0;
+            let perdiste1 = false;
+            let perdiste2 = false;
+
+            function conseguir_array(texto) {
+                let letras = new Array();
+                for (let i = 0; i<texto.length; i++) {
+                        let caracter = texto.charAt(i);
+                        letras.push(caracter);
+                    }
+                return letras;
+            };
+            function esMayuscula(letra){
+                return letra === letra.toUpperCase();
+            };
+
+            function comprobar_letra(array_letras,letra){
+                for (let i = 0; i<array_letras.length; i++) {
+                        let caracter = array_letras[i];
+                        if (caracter == letra) {
+                            return "true";
+                        }
+                    }
+                return "false";
+            }
+
+            function comprobar_input(){
+                let letra = document.getElementById("letra").value;
+                let longitud = letra.length;               
+                if (longitud > 1){
+                    array_letras = conseguir_array(letra);
+                    let primera_letra = array_letras[0];
+                    return primera_letra;
+                }
+                return letra;
+            }
+
+            function comprobar_input2(){
+                let letra = document.getElementById("letra2").value;
+                let longitud = letra.length;               
+                if (longitud > 1){
+                    array_letras = conseguir_array(letra);
+                    let primera_letra = array_letras[0];
+                    return primera_letra;
+                }
+                return letra;
+            }
+
+            function avanzar_ahorcado(){
+                fallos = fallos + 1;
+                document.getElementById("imagen").src=imagenes[fallos];
+                if (fallos >9){
+                    alert("Has perdido!");
+                    document.getElementById("imagen").src=imagenes[10];
+                    perdiste1 = true;
+                }
+            }
+
+            function avanzar_ahorcado2(){
+                fallos2 = fallos2 + 1;
+                document.getElementById("imagen2").src=imagenes[fallos2];
+            }
+
+            function ejemplo(){
+                if (perdiste1 === true){
+                    alert("Has perdido!");
+                    return;
+                }
+                let palabra = document.getElementById("texto2").value;
+                let letra = comprobar_input();
+                array_letras = conseguir_array(palabra);
+                resultado = comprobar_letra(array_letras, letra);
+                if (resultado == "true"){
+                    let anterior_resultado = document.querySelector("#aciertos").innerHTML;
+                    letras_acertadas = conseguir_array(anterior_resultado);
+                    letras_acertadas.push(letra);
+                    let resultado_ejercicio = "";
+                    for (let x = 0; x<array_letras.length; x++) {
+                        let comprobacion = "no";
+                        for (let i = 0; i<letras_acertadas.length; i++) { 
+                            if (array_letras[x] == letras_acertadas[i]){
+                                resultado_ejercicio = resultado_ejercicio + array_letras[x];
+                                comprobacion = "si";
+                                break;
+                            }              
+                    }
+                    if (comprobacion == "no"){
+                        resultado_ejercicio = resultado_ejercicio + "_";
+                    }
+                    }
+                    const label = document.querySelector("#respuesta");
+                    label.innerHTML = resultado_ejercicio;
+                    const label2 = document.querySelector("#aciertos");
+                    label2.innerHTML = letras_acertadas;
+                }
+                else{
+                    avanzar_ahorcado();
+                }
+            }
+            
+                function ejemplo2(){
+                let palabra = document.getElementById("texto").value;
+                let letra = comprobar_input2();
+                array_letras = conseguir_array(palabra);
+                resultado = comprobar_letra(array_letras, letra);
+                if (resultado == "true"){
+                    let anterior_resultado = document.querySelector("#aciertos2").innerHTML;
+                    letras_acertadas = conseguir_array(anterior_resultado);
+                    letras_acertadas.push(letra);
+                    let resultado_ejercicio = "";
+                    for (let x = 0; x<array_letras.length; x++) {
+                        let comprobacion = "no";
+                        for (let i = 0; i<letras_acertadas.length; i++) { 
+                            if (array_letras[x] == letras_acertadas[i]){
+                                resultado_ejercicio = resultado_ejercicio + array_letras[x];
+                                comprobacion = "si";
+                                break;
+                            }              
+                    }
+                    if (comprobacion == "no"){
+                        resultado_ejercicio = resultado_ejercicio + "_";
+                    }
+                    }
+                    const label = document.querySelector("#respuesta2");
+                    label.innerHTML = resultado_ejercicio;
+                    const label2 = document.querySelector("#aciertos2");
+                    label2.innerHTML = letras_acertadas;
+                }
+                else{
+                    avanzar_ahorcado2();
+                }
+            }
+
+        </script>
+    <link rel="stylesheet" type="text/css" href="https://www3.gobiernodecanarias.org/educacion/cau_ce/cookies/cookieconsent.min.css"/><script  type="text/javascript" src="https://www3.gobiernodecanarias.org/educacion/cau_ce/cookies/cookieconsent.min.js"></script><script type="text/javascript" src="https://www3.gobiernodecanarias.org/educacion/cau_ce/cookies/cauce_cookie.js"></script><script type="text/javascript" src="https://www3.gobiernodecanarias.org/educacion/cau_ce/estadisticasweb/scripts/piwik-base.js"></script><script type="text/javascript" src="https://www3.gobiernodecanarias.org/educacion/cau_ce/estadisticasweb/scripts/piwik-eforma.js"></script></head>
+    <body>
+        <div class="usuario1">
+            <label class="usuario_1" id="usuario1">Usuario 1</label>
+            <form class="form1" action="">
+                <label for="inicio_todo" class="palabra1">Introduzca su palabra</label>
+                <input type="password" id="texto" class="palabra_input1"><br>
+                <label for="" class="vacio1"></label>
+                <input class="respuesta1" type="text" id="respuesta">
+                <label for="letra" maxlength="3" class="letra1">letra</label>
+                <input type="text" id="letra" class="letra_input1"><br>
+            </form>
+            <button class="mostrar1" onclick="ejemplo()" id="mostrar">Probar letra</button>
+            <label class="ocultar1" id="aciertos"></label>
+            <img class="img1" src="img/0.jpg" alt="" id="imagen">
+        </div>
+        <br>
+        <div class="usuario2">
+            <label class="usuario_2" id="usuario2">Usuario 2</label>
+            <form class="form2" action="">
+                <label for="inicio_todo2" class="palabra2">Introduzca su palabra</label>
+                <input type="password" id="texto2" class="palabra_input2"><br>
+                <label for="" class="vacio2"></label>
+                <input class="respuesta2" type="text" id="respuesta2">
+                <label for="letra" maxlength="3" class="letra2">letra</label>
+                <input type="text" id="letra2" class="letra_input2"><br>
+            </form>
+            <button class="mostrar2" onclick="ejemplo2()" id="mostrar2">Probar letra</button>
+            <label class="ocultar2" id="aciertos2"></label>
+            <a><img class="img2" src="img/0.jpg" alt="" id="imagen2"></a>
+        </div>
+        <br>
+    </body>
+</html>
